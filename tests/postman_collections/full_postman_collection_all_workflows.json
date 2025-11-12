@@ -1,0 +1,449 @@
+{
+  "info": {
+    "name": "DBB Full Workflows",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create League (Workflow)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Workflow League\",\n  \"scoring\": \"H2H\",\n  \"roster_size\": 12,\n  \"categories\": [\n    \"PTS\",\n    \"REB\"\n  ]\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Create league status', function(){pm.expect(pm.response.code).to.be.oneOf([200,201]);});",
+              "var body = {}; try { body = pm.response.json(); } catch(e) {}",
+              "if(body && body.league_id){ pm.environment.set('workflow_league_id', body.league_id); }",
+              "postman.setNextRequest('Get League (Verify)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get League (Verify)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Get league status', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});",
+              "postman.setNextRequest('Update League (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update League (Workflow)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Workflow League\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Update status', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,422]);});",
+              "postman.setNextRequest('Add Players (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add Players (Workflow)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/roster",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "roster"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"player_id\": 201939\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Add player status', function(){pm.expect(pm.response.code).to.be.oneOf([200,201,400,404]);});",
+              "postman.setNextRequest('Analyze Trade (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analyze Trade (Workflow)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/analyze-trade",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "analyze-trade"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"giving\": [\n    201939\n  ],\n  \"receiving\": [\n    203507\n  ]\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Trade analysis status', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});",
+              "postman.setNextRequest('Get Score (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Score (Workflow)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/score",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "score"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Score OK', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});",
+              "postman.setNextRequest('Get Streaming Candidates (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Streaming Candidates (Workflow)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/streaming-candidates?limit=5",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "streaming-candidates?limit=5"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Streaming candidates status', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});",
+              "var j = {}; try { j = pm.response.json(); } catch(e) {}",
+              "var cand = (j.streaming_candidates && j.streaming_candidates.length>0) ? j.streaming_candidates[0].player_id : null;",
+              "if(cand){ pm.environment.set('stream_target_player', cand); postman.setNextRequest('Add Streaming Player (Workflow)'); } else { postman.setNextRequest('Delete League (Workflow)'); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add Streaming Player (Workflow)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/roster",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "roster"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"player_id\": \"{{stream_target_player}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Add stream player', function(){pm.expect(pm.response.code).to.be.oneOf([200,201,400,404]);});",
+              "postman.setNextRequest('Get Gaps (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Gaps (Workflow)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/gaps",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "gaps"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Gaps OK', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});",
+              "postman.setNextRequest('Delete League (Workflow)');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete League (Workflow)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Delete status', function(){pm.expect(pm.response.code).to.be.oneOf([200,204,404]);});",
+              "pm.environment.unset('workflow_league_id');"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get 5-Year Projection",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/projections/5year/201939",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "projections",
+            "5year",
+            "201939"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Projection status', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analyze Matchup (Standalone)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/leagues/{{workflow_league_id}}/analyze-matchup",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "leagues",
+            "{{workflow_league_id}}",
+            "analyze-matchup"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"opponent_player_ids\": [\n    201939,\n    203507\n  ]\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Opponent analysis status', function(){pm.expect(pm.response.code).to.be.oneOf([200,400,404]);});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
