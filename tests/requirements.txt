@@ -1,0 +1,6 @@
+pytest
+requests
+jsonschema
+pytest-xdist
+pyyaml
+pytest-html

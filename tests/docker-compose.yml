@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  app:
+    image: dominate-basketball/api:latest
+    container_name: dbb_app
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=local
+  tester:
+    build: .
+    container_name: dbb_tester
+    depends_on:
+      - app
+    environment:
+      - BASE_URL=http://app:8000
+      - API_KEY=local-dev-key
+    command: bash run_all_tests.sh

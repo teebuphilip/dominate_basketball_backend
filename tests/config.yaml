@@ -1,0 +1,4 @@
+base_url: "http://localhost:8000"
+api_key: "local-dev-key"
+test_league_id: ""
+perf_threshold: 1.5
